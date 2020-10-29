@@ -14,7 +14,7 @@ export class AuthService {
     ) { }
 
     async login(loginDto: LoginDto): Promise<any> {
-        const user = await this.usersService.findUserByPhoneOrEmail(loginDto.email, loginDto.phone);
+        const user = await this.usersService.findUserByPhoneOrEmail(loginDto.identifier);
 
         if (!user) {
             throw new HttpException({
@@ -38,7 +38,9 @@ export class AuthService {
 
         return {
             success: true,
-            access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+            data: {
+                access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+            }
         };
     }
 
@@ -47,13 +49,16 @@ export class AuthService {
             const user = await this.usersService.createNewUser(registerDto);
             return {
                 success: true,
-                access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+                data: {
+                    access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+                }
             };
         } catch (error) {
             if (error.code === 11000) {
                 throw new HttpException({
                     status: HttpStatus.FORBIDDEN,
                     error: {
+                        name: Object.keys(error.keyPattern)[0],
                         message: `${Object.keys(error.keyPattern)[0]} already exists!`
                     },
                 }, HttpStatus.FORBIDDEN);

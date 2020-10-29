@@ -8,8 +8,8 @@ import { User, UserDocument } from './models/user.model';
 export class UserService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
-    async findUserByPhoneOrEmail(email: string, phone: string): Promise<UserDocument> {
-        return await this.userModel.findOne({ $or: [{ email }, { phone }] }).exec();
+    async findUserByPhoneOrEmail(identifier: string): Promise<UserDocument> {
+        return await this.userModel.findOne({ $or: [{ email: identifier }, { phone: identifier }] }).exec();
     }
 
     async createNewUser(user: RegisterDto): Promise<UserDocument> {
