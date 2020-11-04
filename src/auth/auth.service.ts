@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
+import { CallbackDto } from './dtos/Callback.dto';
 import { LoginDto } from './dtos/Login.dto';
 import { RegisterDto } from './dtos/Register.dto';
 
@@ -63,6 +64,14 @@ export class AuthService {
                     },
                 }, HttpStatus.FORBIDDEN);
             }
+        }
+    }
+
+    async callback(callbackDto: CallbackDto) {
+        if (callbackDto.token) {
+            return "<script>window.close()</script>"
+        } else {
+
         }
     }
 }

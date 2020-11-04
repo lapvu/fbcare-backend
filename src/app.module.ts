@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { OrderModule } from './order/order.module';
+import { WebhookModule } from './webhook/webhook.module';
+import { ConversationModule } from './conversation/conversation.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { OrderModule } from './order/order.module';
     }),
     UserModule,
     AuthModule,
-    OrderModule
+    OrderModule,
+    WebhookModule,
+    ConversationModule
   ],
   controllers: [],
   providers: [],
