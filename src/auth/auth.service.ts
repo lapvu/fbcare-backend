@@ -40,7 +40,7 @@ export class AuthService {
         return {
             success: true,
             data: {
-                access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+                access_token: this.jwtService.sign({ displayName: user.display_name, email: user.email, id: user.id, roles: user.roles }),
             }
         };
     }
@@ -51,7 +51,7 @@ export class AuthService {
             return {
                 success: true,
                 data: {
-                    access_token: this.jwtService.sign({ displayName: user.displayName, email: user.email, id: user.id }),
+                    access_token: this.jwtService.sign({ displayName: user.display_name, email: user.email, id: user.id, roles: user.roles }),
                 }
             };
         } catch (error) {

@@ -1,6 +1,6 @@
 export class RegisterDto {
     email: string;
-    displayName: string;
+    display_name: string;
     phone: string;
     password: string;
     roles?: [string];
