@@ -12,40 +12,34 @@ import { Product, ProductDocument } from './models/product.model';
 export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) { }
 
-    async createProduct(createProductDto: CreateProductDto, userId: string): Promise<any> {
-        const product = await this.productModel.create({ ...createProductDto, userId });
+    async createProduct(createProductDto: CreateProductDto, group_id: string): Promise<any> {
+        const product = await this.productModel.create({ ...createProductDto, group_id });
         return product;
     }
 
-    async getProduct(getProductDto: GetProductDto, userId: string): Promise<any> {
-        const product = await this.productModel.findOne({ _id: getProductDto.productId, userId });
+    async getProduct(getProductDto: GetProductDto, group_id: string): Promise<any> {
+        const product = await this.productModel.findOne({ _id: getProductDto.productId, group_id });
         return product;
     }
 
-    async getProducts(getProductsDto: GetProductsDto, userId: string): Promise<any> {
-        const products = await this.productModel.find({ userId }).skip(+getProductsDto.offset).limit(+getProductsDto.limit);
-        const total = await this.productModel.count({ userId });
+    async getProducts(getProductsDto: GetProductsDto, group_id: string): Promise<any> {
+        const products = await this.productModel.find({ group_id }).skip(+getProductsDto.offset).limit(+getProductsDto.limit).sort({ "updatedAt": -1 });
+        const total = await this.productModel.count({ group_id });
         return { products, total };
     }
 
     async updateProduct(updateProductDto: UpdateProductDto): Promise<any> {
         try {
-            const done = await this.productModel.updateOne({ _id: updateProductDto._id }, {
-                productName: updateProductDto.productName,
-                productDesc: updateProductDto.productDesc,
-                image: updateProductDto.image,
-                quantity: +updateProductDto.quantity,
-                price: +updateProductDto.price,
-            });
+            const done = await this.productModel.updateOne({ _id: updateProductDto._id }, updateProductDto);
             return done;
         } catch (error) {
             console.log(error);
         }
     }
 
-    async deleteProduct(deleteProductDto: DeleteProductDto, userId: string): Promise<any> {
+    async deleteProduct(deleteProductDto: DeleteProductDto, group_id: string): Promise<any> {
         try {
-            const done = await this.productModel.deleteOne({ _id: deleteProductDto.productId, userId })
+            const done = await this.productModel.deleteOne({ _id: deleteProductDto.productId, group_id })
             return done;
         } catch (error) {
 

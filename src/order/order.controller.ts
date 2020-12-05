@@ -11,12 +11,12 @@ export class OrderController {
     @UseGuards(JwtAuthGuard)
     @Post()
     createOrder(@Body() createOrder: CreateOrderDto, @Request() req) {
-        return this.orderSerivce.createOrder(createOrder, req.user.userId);
+        return this.orderSerivce.createOrder(createOrder, req.user.user_id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     getOrdersByCustomer(@Param() getOrdersByCustomerDto: GetOrdersByCustomerDto, @Request() req) {
-        return this.orderSerivce.getOrdersByCustomer(getOrdersByCustomerDto, req.user.userId);
+        return this.orderSerivce.getOrdersByCustomer(getOrdersByCustomerDto, req.user.user_id);
     }
 }

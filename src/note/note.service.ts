@@ -9,13 +9,13 @@ import { Note, NoteDocument } from './model/note.model';
 export class NoteService {
     constructor(@InjectModel(Note.name) private noteModel: Model<NoteDocument>) { }
 
-    async addNote(addNoteDto: AddNoteDto, user_id: string): Promise<any> {
-        const note = await this.noteModel.create({ ...addNoteDto, user_id });
+    async addNote(addNoteDto: AddNoteDto, group_id: string, create_by: string): Promise<any> {
+        const note = await this.noteModel.create({ ...addNoteDto, group_id, create_by });
         return note;
     }
 
-    async getNotes(user_id: string, customer_id: string): Promise<any> {
-        const notes = await this.noteModel.find({ user_id, customer_id });
+    async getNotes(group_id: string, customer_id: string): Promise<any> {
+        const notes = await this.noteModel.find({ group_id, customer_id }).sort({ "updatedAt": -1 });
         return notes;
     }
 

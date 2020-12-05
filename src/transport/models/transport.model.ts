@@ -3,16 +3,29 @@ import { Document } from 'mongoose';
 
 export type TransportDocument = Transport & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Transport {
 
-    _id: string;
+    @Prop({ required: true })
+    access_token: string;
 
     @Prop({ required: true })
-    token: string;
+    pickup_phone: string;
 
     @Prop({ required: true })
-    userId: string;
+    pickup_address: string;
+
+    @Prop({ required: true })
+    pickup_province: string;
+
+    @Prop({ required: true })
+    pickup_district: string;
+
+    @Prop({ required: true })
+    pickup_commune: string;
+
+    @Prop({ required: true })
+    user_id: string;
 
 }
 

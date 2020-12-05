@@ -1,8 +1,12 @@
 export class UpdateProductDto {
     _id: string;
-    productName: string;
-    productDesc: string;
-    price: string;
+    product_name: string;
+    product_desc: string;
+    price: number;
     image: string;
-    quantity: string;
+    quantity: number;
+    weight: number;
+    length: number;
+    width: number;
+    height: number;
 }

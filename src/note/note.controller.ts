@@ -10,13 +10,14 @@ export class NoteController {
     @UseGuards(JwtAuthGuard)
     @Post()
     addNote(@Body() addNoteDto: AddNoteDto, @Request() req) {
-        return this.noteService.addNote(addNoteDto, req.user.userId)
+        const { group_id, user_id } = req.user;
+        return this.noteService.addNote(addNoteDto, group_id, user_id)
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     getNotes(@Query() query: any, @Request() req) {
-        return this.noteService.getNotes(req.user.userId, query.customer_id);
+        return this.noteService.getNotes(req.user.group_id, query.customer_id);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CallbackDto } from './dtos/Callback.dto';
 import { LoginDto } from './dtos/Login.dto';
 import { RegisterDto } from './dtos/Register.dto';
 
@@ -15,10 +14,5 @@ export class AuthController {
     @Post("register")
     async register(@Body() registerDto: RegisterDto): Promise<any> {
         return await this.authService.register(registerDto);
-    }
-
-    @Get("callback")
-    async callback(@Query() callbackDto: CallbackDto): Promise<any> {
-        return this.authService.callback(callbackDto);
     }
 }

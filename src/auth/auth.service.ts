@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserService } from '../user/user.service';
-import { CallbackDto } from './dtos/Callback.dto';
 import { LoginDto } from './dtos/Login.dto';
 import { RegisterDto } from './dtos/Register.dto';
 
@@ -32,15 +31,17 @@ export class AuthService {
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
                 error: {
-                    message: `email/phone or password does not match!`
+                    message: `email/phone hoặc mật khẩu không đúng!`
                 },
             }, HttpStatus.FORBIDDEN);
         }
 
+        const { display_name, roles, _id, group_id, } = user;
+
         return {
             success: true,
             data: {
-                access_token: this.jwtService.sign({ displayName: user.display_name, email: user.email, id: user.id, roles: user.roles }),
+                access_token: this.jwtService.sign({ display_name, roles, user_id: _id, group_id }),
             }
         };
     }
@@ -48,10 +49,11 @@ export class AuthService {
     async register(registerDto: RegisterDto): Promise<any> {
         try {
             const user = await this.usersService.createNewUser(registerDto);
+            const { display_name, roles, _id, group_id } = user;
             return {
                 success: true,
                 data: {
-                    access_token: this.jwtService.sign({ displayName: user.display_name, email: user.email, id: user.id, roles: user.roles }),
+                    access_token: this.jwtService.sign({ display_name, roles, user_id: _id, group_id }),
                 }
             };
         } catch (error) {
@@ -60,18 +62,10 @@ export class AuthService {
                     status: HttpStatus.FORBIDDEN,
                     error: {
                         name: Object.keys(error.keyPattern)[0],
-                        message: `${Object.keys(error.keyPattern)[0]} already exists!`
+                        message: `${Object.keys(error.keyPattern)[0]} đã tồn tại!`
                     },
                 }, HttpStatus.FORBIDDEN);
             }
-        }
-    }
-
-    async callback(callbackDto: CallbackDto) {
-        if (callbackDto.token) {
-            return "<script>window.close()</script>"
-        } else {
-
         }
     }
 }

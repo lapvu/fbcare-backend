@@ -3,9 +3,12 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
     _id: string;
+
+    @Prop()
+    group_id?: string;
 
     @Prop({ required: true })
     display_name: string;

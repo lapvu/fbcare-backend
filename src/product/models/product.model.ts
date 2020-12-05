@@ -3,24 +3,24 @@ import { Document } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Product {
     _id?: string;
 
     @Prop({ required: true })
-    productName: string;
+    group_id: string;
 
     @Prop({ required: true })
-    productDesc: string;
+    product_name: string;
+
+    @Prop({ required: true })
+    product_desc: string;
 
     @Prop({ required: true })
     price: number;
 
     @Prop({ required: true })
     image: string;
-
-    @Prop({ required: true })
-    userId: string;
 
     @Prop({ default: 1 })
     quantity: number;

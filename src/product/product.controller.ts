@@ -14,25 +14,25 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     @Post()
     async createProduct(@Body() createProductDto: CreateProductDto, @Request() req): Promise<any> {
-        return this.productSerivce.createProduct(createProductDto, req.user.userId)
+        return this.productSerivce.createProduct(createProductDto, req.user.group_id)
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     async getProducts(@Query() getProductsDto: GetProductsDto, @Request() req): Promise<any> {
-        return this.productSerivce.getProducts(getProductsDto, req.user.userId);
+        return this.productSerivce.getProducts(getProductsDto, req.user.group_id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get(":productId")
     async getProduct(@Param() getProductDto: GetProductDto, @Request() req): Promise<any> {
-        return this.productSerivce.getProduct(getProductDto, req.user.userId);
+        return this.productSerivce.getProduct(getProductDto, req.user.group_id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(":productId")
     async deleteProduct(@Param() deleteProductDto: DeleteProductDto, @Request() req): Promise<any> {
-        return this.productSerivce.deleteProduct(deleteProductDto, req.user.userId);
+        return this.productSerivce.deleteProduct(deleteProductDto, req.user.group_id);
     }
 
     @UseGuards(JwtAuthGuard)
