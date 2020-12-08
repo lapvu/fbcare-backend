@@ -17,7 +17,7 @@ export class EmployeeController {
     @UseGuards(JwtAuthGuard)
     @Get()
     async getEmployees(@Param() getEmployeeDto: GetEmployeeDto, @Request() req): Promise<any> {
-        return this.employeeService.getEmployees(getEmployeeDto, req.user.group_id, req.user.user_id);
+        return this.employeeService.getEmployees(getEmployeeDto, req.user.group_id);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -20,7 +20,8 @@ export class NoteService {
     }
 
     async deleteNote(deleteNote: DeleteNote, user_id: string): Promise<any> {
-        const notes = await this.noteModel.remove({ _id: deleteNote.note_id, user_id });
-        return notes;
+        console.log(user_id, deleteNote);
+        const done = await this.noteModel.remove({ _id: deleteNote.note_id, create_by: user_id });
+        return done;
     }
 }

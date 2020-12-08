@@ -23,8 +23,8 @@ export class EmployeeService {
         }
     }
 
-    async getEmployees(getEmployeeDto, group_id: string, user_id: string): Promise<any> {
-        const employees = await this.userService.getEmployees(getEmployeeDto, group_id, user_id);
+    async getEmployees(getEmployeeDto, group_id: string): Promise<any> {
+        const employees = await this.userService.getEmployees(getEmployeeDto, group_id);
         return employees;
     }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { RegisterDto } from 'src/auth/dtos/Register.dto';
 import { CreateEmployeeDto } from 'src/employee/dtos/CreateEmployee.dto';
 import { GetEmployeeDto } from 'src/employee/dtos/GetEmployees.dto';
@@ -26,8 +26,8 @@ export class UserService {
         return user;
     }
 
-    async getEmployees(getEmployeeDto: GetEmployeeDto, group_id: string, user_id: string): Promise<any> {
-        const employees = await this.userModel.find({ group_id, _id: { $ne: user_id } },
+    async getEmployees(getEmployeeDto: GetEmployeeDto, group_id: string): Promise<any> {
+        const employees = await this.userModel.find({ group_id, _id: { $ne: Types.ObjectId(group_id) } },
             {
                 display_name: 1,
                 _id: 1,
@@ -37,7 +37,7 @@ export class UserService {
             .skip(+getEmployeeDto.offset)
             .limit(+getEmployeeDto.limit)
             .sort({ "updatedAt": -1 });
-        const total = await this.userModel.count({ group_id, _id: { $ne: user_id } });
+        const total = await this.userModel.count({ group_id, _id: { $ne: Types.ObjectId(group_id) } });
         return { employees, total };
     }
 

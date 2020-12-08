@@ -21,10 +21,10 @@ export class Order {
     customer_email: string;
 
     @Prop({ required: true })
-    supplier_id: string;
+    create_by: string;
 
     @Prop({ default: null })
-    employee_id?: string;
+    group_id?: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
