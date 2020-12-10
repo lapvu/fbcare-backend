@@ -45,4 +45,9 @@ export class ProductService {
 
         }
     }
+
+    async searchProduct(query: string): Promise<any> {
+        const products = await this.productModel.find({ $or: [{ product_name: { "$regex": query, "$options": "i" } }, { product_desc: { "$regex": query, "$options": "i" } }] });
+        return products;
+    }
 }
