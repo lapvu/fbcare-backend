@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as randomstring from "randomstring";
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { DeleteProductDto } from './dtos/DeleteProduct.dto';
 import { GetProductDto } from './dtos/GetProduct.dto';
@@ -13,7 +14,8 @@ export class ProductService {
     constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) { }
 
     async createProduct(createProductDto: CreateProductDto, group_id: string): Promise<any> {
-        const product = await this.productModel.create({ ...createProductDto, group_id });
+        const product_id = randomstring.generate({ length: 7, charset: 'numeric' });
+        const product = await this.productModel.create({ ...createProductDto, _id: product_id, group_id });
         return product;
     }
 
@@ -23,7 +25,10 @@ export class ProductService {
     }
 
     async getProducts(getProductsDto: GetProductsDto, group_id: string): Promise<any> {
-        const products = await this.productModel.find({ group_id }).skip(+getProductsDto.offset).limit(+getProductsDto.limit).sort({ "updatedAt": -1 });
+        const products = await this.productModel.find({ group_id })
+            .skip(+getProductsDto.offset)
+            .limit(+getProductsDto.limit)
+            .sort({ "updatedAt": -1 });
         const total = await this.productModel.count({ group_id });
         return { products, total };
     }
@@ -46,8 +51,14 @@ export class ProductService {
         }
     }
 
-    async searchProduct(query: string): Promise<any> {
-        const products = await this.productModel.find({ $or: [{ product_name: { "$regex": query, "$options": "i" } }, { product_desc: { "$regex": query, "$options": "i" } }] });
+    async searchProduct(query: string, group_id: string): Promise<any> {
+        const products = await this.productModel.find({
+            $or: [
+                { product_name: { "$regex": query, "$options": "i" } },
+                { _id: { "$regex": query, "$options": "i" } }
+            ],
+            group_id
+        });
         return products;
     }
 }

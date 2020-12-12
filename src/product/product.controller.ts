@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Request, UseGuards } from '@nestjs/common';
+import { query } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { DeleteProductDto } from './dtos/DeleteProduct.dto';
@@ -24,6 +25,12 @@ export class ProductController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get("/search")
+    async searchProducts(@Query() query: any, @Request() req) {
+        return this.productSerivce.searchProduct(query.q, req.user.group_id);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get(":productId")
     async getProduct(@Param() getProductDto: GetProductDto, @Request() req): Promise<any> {
         return this.productSerivce.getProduct(getProductDto, req.user.group_id);
@@ -40,4 +47,5 @@ export class ProductController {
     async updateProduct(@Body() updateProductDto: UpdateProductDto): Promise<any> {
         return this.productSerivce.updateProduct(updateProductDto);
     }
+
 }

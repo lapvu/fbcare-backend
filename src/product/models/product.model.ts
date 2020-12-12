@@ -5,7 +5,8 @@ export type ProductDocument = Product & Document;
 
 @Schema({ timestamps: true })
 export class Product {
-    _id?: string;
+    @Prop({ required: true })
+    _id: string;
 
     @Prop({ required: true })
     group_id: string;

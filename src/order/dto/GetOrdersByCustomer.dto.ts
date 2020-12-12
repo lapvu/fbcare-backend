@@ -1,3 +1,3 @@
 export class GetOrdersByCustomerDto {
-    customer_id: string;
+    id: string;
 }
