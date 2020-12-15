@@ -61,4 +61,9 @@ export class ProductService {
         });
         return products;
     }
+
+    async countProduct(group_id: string): Promise<any> {
+        const total = await this.productModel.count({ group_id });
+        return total;
+    }
 }

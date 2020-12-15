@@ -9,5 +9,6 @@ import { TransportModule } from 'src/transport/transport.module';
   imports: [MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]), TransportModule, HttpModule],
   providers: [OrderService],
   controllers: [OrderController],
+  exports: [OrderService]
 })
 export class OrderModule { }

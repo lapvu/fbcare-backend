@@ -26,7 +26,6 @@ export class Transport {
 
     @Prop({ required: true })
     user_id: string;
-
 }
 
 export const TransportSchema = SchemaFactory.createForClass(Transport);

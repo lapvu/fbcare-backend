@@ -19,7 +19,6 @@ export class OrderService {
     private SUPER_SHIP_API = "https://api.mysupership.vn";
 
     async createOrder(createOrderDto: CreateOrderDto, user_id: string, group_id: string): Promise<any> {
-        console.log(createOrderDto)
         const setting = await this.transportSerive.getSetting(user_id);
         if (!setting) {
             throw new HttpException({
@@ -125,5 +124,20 @@ export class OrderService {
                 total
             }
         }
+    }
+
+    async countOrder(user_id: string, group_id: string, roles: any): Promise<any> {
+        if (roles.includes("supplier")) {
+            const total = await this.orderModel.count({ group_id });
+            return total;
+        } else {
+            const total = await this.orderModel.count({ create_by: user_id });
+            return total;
+        }
+    }
+
+    async udpateStatusOrder(status: number, soc: string): Promise<any> {
+        const res = await this.orderModel.updateOne({ _id: soc }, { status });
+        return res;
     }
 }

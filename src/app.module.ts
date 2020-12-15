@@ -10,6 +10,7 @@ import { TransportModule } from './transport/transport.module';
 import { NoteModule } from './note/note.module';
 import { EmployeeModule } from './employee/employee.module';
 import { WebhookModule } from './webhook/webhook.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { WebhookModule } from './webhook/webhook.module';
     NoteModule,
     EmployeeModule,
     WebhookModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],

@@ -24,4 +24,9 @@ export class NoteService {
         const done = await this.noteModel.remove({ _id: deleteNote.note_id, create_by: user_id });
         return done;
     }
+
+    async countNote(group_id: string): Promise<any> {
+        const total = await this.noteModel.count({ group_id });
+        return total;
+    }
 }

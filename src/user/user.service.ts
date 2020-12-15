@@ -45,4 +45,9 @@ export class UserService {
         const done = await this.userModel.remove({ user_id, group_id });
         return done;
     }
+
+    async countEmployee(group_id: string): Promise<any> {
+        const total = await this.userModel.count({ group_id, _id: { $ne: Types.ObjectId(group_id) } });
+        return total;
+    }
 }

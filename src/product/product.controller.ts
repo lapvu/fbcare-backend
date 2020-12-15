@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Request, UseGuards } from '@nestjs/common';
-import { query } from 'express';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from './dtos/CreateProduct.dto';
 import { DeleteProductDto } from './dtos/DeleteProduct.dto';
