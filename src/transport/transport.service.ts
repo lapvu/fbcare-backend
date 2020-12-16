@@ -25,15 +25,20 @@ export class TransportService {
     }
 
     async registerHook(access_token: string): Promise<any> {
-        const headers = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${access_token}`
+        try {
+            const headers = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                }
             }
+            const res = await axios.post("https://api.mysupership.vn/v1/partner/webhooks/create", {
+                url: "http://172.105.214.160/webhook"
+            }, headers);
+            console.log(res)
+            if (res.status === 200 && res.data.status === "Success") return true;
+        } catch (error) {
+            console.log(error)
         }
-        const res = await axios.post("https://api.mysupership.vn/v1/partner/webhooks/create", {
-            url: ""
-        }, headers);
-        if (res.status === 200 && res.data.status === "Success") return true;
     }
 }
