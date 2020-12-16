@@ -34,7 +34,16 @@ export class Order {
     total_quantity: number;
 
     @Prop({ default: 1 })
-    status?: number;
+    status: number;
+
+    @Prop({ required: true })
+    code: string;
+
+    @Prop()
+    fee: number;
+
+    @Prop()
+    status_name: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

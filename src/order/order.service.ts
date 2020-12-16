@@ -35,66 +35,63 @@ export class OrderService {
                 'Authorization': `Bearer ${setting.access_token}`
             }
         }
-        const soc = randomstring.generate({ length: 9, charset: 'numeric' });
+        const soc = "FB" + randomstring.generate({ length: 7, charset: 'numeric' });
         try {
-            const res = await axios.post(`${this.SUPER_SHIP_API}/v1/partner/orders/add`,
-                {
-                    pickup_phone: setting.pickup_phone,
-                    pickup_address: setting.pickup_address,
-                    pickup_commune: JSON.parse(setting.pickup_commune).name,
-                    pickup_district: JSON.parse(setting.pickup_district).name,
-                    pickup_province: JSON.parse(setting.pickup_province).name,
-                    name: createOrderDto.customer_name,
-                    phone: createOrderDto.customer_phone,
-                    email: createOrderDto.customer_email || "lapvv62@wru.vn",
-                    address: createOrderDto.address,
-                    province: createOrderDto.province,
-                    district: createOrderDto.district,
-                    commune: createOrderDto.commune,
-                    amount: createOrderDto.amount,
-                    weight: createOrderDto.weight,
-                    note: createOrderDto.note,
-                    soc,
-                    payer: "1",
-                    service: "1",
-                    config: "1",
-                    product_type: "2",
-                    products: createOrderDto.products
-                },
-                headers
-            )
-            if (res.data.status === "Success") {
-
+            const data = {
+                pickup_phone: setting.pickup_phone,
+                pickup_address: setting.pickup_address,
+                pickup_commune: JSON.parse(setting.pickup_commune).name,
+                pickup_district: JSON.parse(setting.pickup_district).name,
+                pickup_province: JSON.parse(setting.pickup_province).name,
+                name: createOrderDto.customer_name,
+                phone: createOrderDto.customer_phone,
+                email: createOrderDto.customer_email || "lapvv62@wru.vn",
+                address: createOrderDto.address,
+                province: createOrderDto.province,
+                district: createOrderDto.district,
+                commune: createOrderDto.commune,
+                amount: createOrderDto.amount,
+                weight: createOrderDto.weight,
+                note: createOrderDto.note,
+                products: createOrderDto.products,
+                payer: "1",
+                config: "1",
+                service: "1",
+                product_type: "2",
+                soc
             }
-        } catch (error) {
-            if (error.data) {
-                throw new HttpException({
-                    status: HttpStatus.FORBIDDEN,
-                    error: {
-                        name: "order",
-                        message: error.data
-                    },
-                }, HttpStatus.FORBIDDEN);
-            } else {
+            const res = await axios.post(`${this.SUPER_SHIP_API}/v1/partner/orders/add`, data, headers)
+            if (res.data.status === "Success") {
                 let total_quantity = 0;
                 createOrderDto.products.forEach((e: any) => {
                     total_quantity += e.quantity
                 });
                 const order = this.orderModel.create({
                     _id: soc,
+                    group_id,
+                    total_quantity,
                     create_by: user_id,
-                    amount: createOrderDto.amount,
-                    customer_email: createOrderDto.customer_email,
-                    customer_phone: createOrderDto.customer_phone,
+                    fee: res.data.results.fee,
+                    code: res.data.results.code,
+                    amount: res.data.results.amount,
+                    status: +res.data.results.status,
+                    status_name: res.data.results.status_name,
                     customer_id: createOrderDto.customer_id,
                     customer_name: createOrderDto.customer_name,
-                    group_id,
-                    total_quantity
+                    customer_email: createOrderDto.customer_email,
+                    customer_phone: createOrderDto.customer_phone,
                 })
                 return order;
             }
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: {
+                    name: "order",
+                    message: error.data
+                },
+            }, HttpStatus.FORBIDDEN);
         }
-        return null;
     }
 
     async getOrdersByCustomer(getOrdersByCustomerDto: GetOrdersByCustomerDto, user_id): Promise<any> {
@@ -139,5 +136,9 @@ export class OrderService {
     async udpateStatusOrder(status: number, soc: string): Promise<any> {
         const res = await this.orderModel.updateOne({ _id: soc }, { status });
         return res;
+    }
+
+    async cancelOrder(): Promise<any> {
+        return null;
     }
 }

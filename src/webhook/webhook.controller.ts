@@ -8,7 +8,6 @@ export class WebhookController {
     constructor(private webhookSerivce: WebhookService) { }
     @Post()
     hook(@Body() hookRequestDto: HookRequestDto): void {
-        console.log(hookRequestDto)
         this.webhookSerivce.updateOrderStatus(hookRequestDto);
     }
 }
