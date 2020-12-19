@@ -8,6 +8,7 @@ import { GetOrdersByCustomerDto } from './dto/GetOrdersByCustomer.dto';
 import { Order, OrderDocument } from './models/order.model';
 import { TransportService } from 'src/transport/transport.service';
 import { GetOrders } from './dto/GetOrder.dto';
+import { GetFeeDto } from './dto/GetFee.dto';
 
 @Injectable()
 export class OrderService {
@@ -18,7 +19,7 @@ export class OrderService {
 
     private SUPER_SHIP_API = "https://api.mysupership.vn";
 
-    async createOrder(createOrderDto: CreateOrderDto, user_id: string, group_id: string): Promise<any> {
+    async createOrder(createOrderDto: CreateOrderDto, user_id: string, group_id: string, display_name: string): Promise<any> {
         const setting = await this.transportSerive.getSetting(user_id);
         if (!setting) {
             throw new HttpException({
@@ -80,6 +81,7 @@ export class OrderService {
                     customer_name: createOrderDto.customer_name,
                     customer_email: createOrderDto.customer_email,
                     customer_phone: createOrderDto.customer_phone,
+                    created_name: display_name
                 })
                 return order;
             }
@@ -140,5 +142,35 @@ export class OrderService {
 
     async cancelOrder(): Promise<any> {
         return null;
+    }
+
+    async getFee(getFeeDto: GetFeeDto, user_id: string): Promise<any> {
+        const setting = await this.transportSerive.getSetting(user_id);
+        if (!setting) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: {
+                    name: "transport",
+                    message: `setting transport not exists!`
+                },
+            }, HttpStatus.FORBIDDEN);
+        }
+        const headers = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${setting.access_token}`
+            }
+        }
+        try {
+            const params = `sender_province=${setting.pickup_province}&sender_district=${setting.pickup_district}&receiver_province=${getFeeDto.receiver_province}&receiver_district=${getFeeDto.receiver_district}&weight=${getFeeDto.weight}`
+            console.log(params)
+            const res = await axios.get(`${this.SUPER_SHIP_API}/v1/partner/orders/price?${params}`, headers);
+            if (res.data.status === "Success") {
+                return res.data.results.fee;
+            }
+            return 0;
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

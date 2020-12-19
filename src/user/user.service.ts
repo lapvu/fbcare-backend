@@ -50,4 +50,9 @@ export class UserService {
         const total = await this.userModel.count({ group_id, _id: { $ne: Types.ObjectId(group_id) } });
         return total;
     }
+
+    async me(user_id: string): Promise<any> {
+        const user = await this.userModel.findOne({ _id: user_id }, { password: 0 });
+        return user;
+    }
 }

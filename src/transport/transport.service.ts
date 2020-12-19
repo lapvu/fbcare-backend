@@ -11,12 +11,7 @@ export class TransportService {
 
     async saveSetting(saveSettingDto: SaveSettingDto, user_id: string): Promise<any> {
         const transport = await this.transportModel.updateOne({ user_id }, saveSettingDto, { upsert: true });
-        const res = await this.registerHook(saveSettingDto.access_token);
-        if (res) {
-            return transport;
-        } else {
-            return null;
-        }
+        return transport;
     }
 
     async getSetting(user_id: string): Promise<any> {

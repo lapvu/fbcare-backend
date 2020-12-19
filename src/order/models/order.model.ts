@@ -24,6 +24,9 @@ export class Order {
     @Prop({ required: true })
     create_by: string;
 
+    @Prop({ required: true })
+    created_name: string;
+
     @Prop({ default: null })
     group_id?: string;
 
