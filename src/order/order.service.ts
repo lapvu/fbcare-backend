@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import axios from "axios";
 import * as randomstring from "randomstring";
+import * as queryString from "query-string";
 import { CreateOrderDto } from './dto/CreateOrder.dto';
 import { GetOrdersByCustomerDto } from './dto/GetOrdersByCustomer.dto';
 import { Order, OrderDocument } from './models/order.model';
@@ -135,8 +136,8 @@ export class OrderService {
         }
     }
 
-    async udpateStatusOrder(status: number, soc: string): Promise<any> {
-        const res = await this.orderModel.updateOne({ _id: soc }, { status });
+    async udpateStatusOrder(status: number, status_name: string, soc: string): Promise<any> {
+        const res = await this.orderModel.updateOne({ _id: soc }, { status, status_name });
         return res;
     }
 
@@ -162,15 +163,22 @@ export class OrderService {
             }
         }
         try {
-            const params = `sender_province=${setting.pickup_province}&sender_district=${setting.pickup_district}&receiver_province=${getFeeDto.receiver_province}&receiver_district=${getFeeDto.receiver_district}&weight=${getFeeDto.weight}`
-            console.log(params)
-            const res = await axios.get(`${this.SUPER_SHIP_API}/v1/partner/orders/price?${params}`, headers);
-            if (res.data.status === "Success") {
-                return res.data.results.fee;
+            const params = {
+                sender_province: JSON.parse(setting.pickup_province).name,
+                sender_district: JSON.parse(setting.pickup_district).name,
+                receiver_province: getFeeDto.receiver_province,
+                receiver_district: getFeeDto.receiver_district,
+                weight: getFeeDto.weight
             }
-            return 0;
+            const res = await axios.get(`${this.SUPER_SHIP_API}/v1/partner/orders/price?${queryString.stringify(params)}`, headers);
+            return res.data;
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async getOrderStatus(): Promise<any> {
+        const orders = await this.orderModel.find({ status: { $ne: 0 } }).select({ code: 1, status: 1, _id: 1 });
+        return orders;
     }
 }
