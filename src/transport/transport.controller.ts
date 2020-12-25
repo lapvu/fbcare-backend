@@ -10,12 +10,12 @@ export class TransportController {
     @UseGuards(JwtAuthGuard)
     @Post()
     saveSetting(@Body() saveSettingDto: SaveSettingDto, @Request() req) {
-        return this.transportService.saveSetting(saveSettingDto, req.user.user_id);
+        return this.transportService.saveSetting(saveSettingDto, req.user.group_id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get()
     getSetting(@Request() req) {
-        return this.transportService.getSetting(req.user.user_id);
+        return this.transportService.getSetting(req.user.group_id);
     }
 }

@@ -31,6 +31,6 @@ export class OrderController {
     @UseGuards(JwtAuthGuard)
     @Post("/fee")
     getFee(@Body() getFeeDto: GetFeeDto, @Request() req) {
-        return this.orderSerivce.getFee(getFeeDto, req.user.user_id);
+        return this.orderSerivce.getFee(getFeeDto, req.user.group_id);
     }
 }

@@ -25,7 +25,7 @@ export class Transport {
     pickup_commune: string;
 
     @Prop({ required: true })
-    user_id: string;
+    group_id: string;
 }
 
 export const TransportSchema = SchemaFactory.createForClass(Transport);

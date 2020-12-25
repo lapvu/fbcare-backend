@@ -21,7 +21,7 @@ export class OrderService {
     private SUPER_SHIP_API = "https://api.mysupership.vn";
 
     async createOrder(createOrderDto: CreateOrderDto, user_id: string, group_id: string, display_name: string): Promise<any> {
-        const setting = await this.transportSerive.getSetting(user_id);
+        const setting = await this.transportSerive.getSetting(group_id);
         if (!setting) {
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
@@ -145,8 +145,8 @@ export class OrderService {
         return null;
     }
 
-    async getFee(getFeeDto: GetFeeDto, user_id: string): Promise<any> {
-        const setting = await this.transportSerive.getSetting(user_id);
+    async getFee(getFeeDto: GetFeeDto, group_id: string): Promise<any> {
+        const setting = await this.transportSerive.getSetting(group_id);
         if (!setting) {
             throw new HttpException({
                 status: HttpStatus.FORBIDDEN,
